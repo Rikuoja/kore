@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'modeltranslation',
+    'drf_cached_instances',
     'munigeo',
     'schools'
 ]
