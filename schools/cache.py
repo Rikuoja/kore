@@ -13,12 +13,6 @@ class SchoolCache(BaseCache):
     # a dummy school request to initialize the serializer
     request = Request(RequestFactory().get('/v1/school/'))
 
-    def school_default_serializer(self, obj):
-        ret = SchoolSerializer(context={'request': self.request}).to_representation(obj)
-        from pprint import pprint
-        pprint(ret)
-        return ret
-
     def school_default_loader(self, pk):
         try:
             obj = School.objects.get(pk=pk)
@@ -29,3 +23,6 @@ class SchoolCache(BaseCache):
     def school_default_invalidator(self, obj):
         # never invalidates, cache is refreshed on reboot only
         return []
+
+    def school_default_serializer_class(self):
+        return SchoolSerializer(context={'request': self.request})
