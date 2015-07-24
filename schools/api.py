@@ -7,18 +7,21 @@ from .serializers import *
 from schools import cache
 
 
-class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
+class LanguageViewSet(CachedViewMixin, viewsets.ReadOnlyModelViewSet):
+    cache_class = cache.get_cache_class(Language)
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
 
-class SchoolTypeNameViewSet(viewsets.ReadOnlyModelViewSet):
+class SchoolTypeNameViewSet(CachedViewMixin, viewsets.ReadOnlyModelViewSet):
+    cache_class = cache.get_cache_class(SchoolTypeName)
     queryset = SchoolTypeName.objects.all()
     serializer_class = SchoolTypeNameSerializer
     paginate_by = 50
 
 
-class SchoolFieldNameViewSet(viewsets.ReadOnlyModelViewSet):
+class SchoolFieldNameViewSet(CachedViewMixin, viewsets.ReadOnlyModelViewSet):
+    cache_class = cache.get_cache_class(SchoolFieldName)
     queryset = SchoolFieldName.objects.all()
     serializer_class = SchoolFieldNameSerializer
 
@@ -102,7 +105,7 @@ class SchoolFilter(django_filters.FilterSet):
 
 
 class SchoolViewSet(CachedViewMixin, viewsets.ReadOnlyModelViewSet):
-    cache_class = cache.SchoolCache
+    cache_class = cache.get_cache_class(School)
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend)
@@ -186,27 +189,28 @@ class EmployershipFilter(django_filters.FilterSet):
                   'school_gender']
 
 
-class SinglePrincipalViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class SinglePrincipalViewSet(CachedViewMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    cache_class = cache.get_cache_class(Language)
     queryset = Principal.objects.all()
     serializer_class = PrincipalSerializer
 
 
-class PrincipalViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class PrincipalViewSet(CachedViewMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     Please enter principal name in ?search=
     """
-
+    cache_class = cache.get_cache_class(Language)
     queryset = Principal.objects.all()
     serializer_class = PrincipalSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend)
     filter_class = PrincipalFilter
 
 
-class EmployershipViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class EmployershipViewSet(CachedViewMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     Please enter principal name in ?search=
     """
-
+    cache_class = cache.get_cache_class(Language)
     queryset = Employership.objects.all()
     serializer_class = EmployershipSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -268,14 +272,16 @@ class BuildingFilter(django_filters.FilterSet):
                   'school_gender']
 
 
-class SchoolBuildingViewSet(viewsets.ReadOnlyModelViewSet):
+class SchoolBuildingViewSet(CachedViewMixin, viewsets.ReadOnlyModelViewSet):
+    cache_class = cache.get_cache_class(SchoolBuilding)
     queryset = SchoolBuilding.objects.all()
     serializer_class = SchoolBuildingSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend)
     filter_class = SchoolBuildingFilter
 
 
-class BuildingViewSet(viewsets.ReadOnlyModelViewSet):
+class BuildingViewSet(CachedViewMixin, viewsets.ReadOnlyModelViewSet):
+    cache_class = cache.get_cache_class(Building)
     queryset = Building.objects.all()
     serializer_class = BuildingSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend)
