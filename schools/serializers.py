@@ -158,10 +158,11 @@ class SchoolBuildingPhotoSerializer(serializers.ModelSerializer):
         # we have to reformat the URL representation so that our API serves the corresponding photo URL
         # this method will have to be updated whenever Finna API changes!
         representation = super(SchoolBuildingPhotoSerializer, self).to_representation(instance)
-        representation['url'] = representation['url'].replace(
-            '.finna.fi/Record/',
-            '.finna.fi/thumbnail.php?id='
-        ) + '&size=large'
+        new_url = representation['url'].replace('.finna.fi/Record/', '.finna.fi/thumbnail.php?id=')
+        if new_url != representation['url']:
+            # take care we don't append to the url if it wasn't modified
+            new_url += '&size=large'
+        representation['url'] = new_url
         return representation
 
     class Meta:
